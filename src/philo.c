@@ -3,16 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: struf <struf@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mbaptist <mbaptist@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:47:19 by mbaptist          #+#    #+#             */
-/*   Updated: 2023/10/18 10:34:32 by struf            ###   ########.fr       */
+/*   Updated: 2023/10/23 17:05:17 by mbaptist         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	main(int argc, char **argv)
+int main(int argc, char **argv)
 {
-	if (argc != 6)
+    if (argc < 5 || argc > 6)
+        return close_game("Error: Not enough arguments.");
+    
+    int number_of_philosophers = ft_atoi(argv[1]);
+    if (!number_of_philosophers)
+        return close_game("Error: Failed to create philosophers.");
+    
+    pthread_mutex_t forks[number_of_philosophers];
+    initialize_mutexes(forks, number_of_philosophers);
+    pthread_t philosopher_threads[number_of_philosophers];
+    t_philosopher philosophers[number_of_philosophers];
+
+    create_philosophers_and_threads(philosopher_threads, philosophers, forks, argv, argc);
+    join_threads(philosopher_threads, number_of_philosophers);
+    destroy_mutexes(forks, number_of_philosophers);
+
+    return 0;
+}
+int close_game(const char *msg)
+{
+    printf("%s\n", msg);
+    return EXIT_FAILURE;
 }
