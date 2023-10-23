@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbaptist <mbaptist@student.42.fr>          +#+  +:+       +#+        */
+/*   By: struf <struf@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:47:19 by mbaptist          #+#    #+#             */
-/*   Updated: 2023/10/17 16:49:12 by mbaptist         ###   ########.fr       */
+/*   Updated: 2023/10/18 10:34:32 by struf            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int main (int argc, char **argv)
+int	main(int argc, char **argv)
 {
-    if (argc != 6)
-        
+	if (argc != 6)
 }
