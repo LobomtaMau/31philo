@@ -6,13 +6,11 @@
 /*   By: mbaptist <mbaptist@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:38:37 by mbaptist          #+#    #+#             */
-/*   Updated: 2023/10/17 16:46:46 by mbaptist         ###   ########.fr       */
+/*   Updated: 2023/10/23 11:05:09 by mbaptist         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-
 
 typedef struct s_philo
 {
