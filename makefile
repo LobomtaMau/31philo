@@ -6,7 +6,7 @@
 #    By: mbaptist <mbaptist@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/23 14:07:10 by mbaptist          #+#    #+#              #
-#    Updated: 2023/10/23 17:19:59 by mbaptist         ###   ########.fr        #
+#    Updated: 2023/10/24 15:16:14 by mbaptist         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,7 @@ OBJ_DIR = obj
 
 OBJ = $(addprefix $(OBJ_DIR)/,$(SRC:.c=.o))
 
-CC = gcc
+CC = cc
 CFLAGS = -Wall -Werror -Wextra
 RM = rm -fr
 

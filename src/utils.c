@@ -6,7 +6,7 @@
 /*   By: mbaptist <mbaptist@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 13:59:50 by mbaptist          #+#    #+#             */
-/*   Updated: 2023/10/23 17:13:42 by mbaptist         ###   ########.fr       */
+/*   Updated: 2023/10/24 15:56:18 by mbaptist         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,20 @@ int	ft_atoi(const char *str)
 	return (res * sign);
 }
 
-unsigned long get_curr_time_in_milliscs()
+unsigned long get_curr_time_in_milliscs(void)
 {
-    struct timeval now;
-    gettimeofday(&now, NULL);
-    return (now.tv_sec * 1000UL) + (now.tv_usec / 1000UL);
+    struct timeval time;
+	if (gettimeofday(&time, NULL) == -1)
+		return close_game("Error: getting time.\n");
+    return (time.tv_sec * 1000UL) + (time.tv_usec / 1000UL);
 }
+
+// int	ft_usleep(unsigned long milliseconds)
+// {
+// 	unsigned long	start;
+
+// 	start = get_current_time();
+// 	while ((get_current_time() - start) < milliseconds)
+// 		usleep(500);
+// 	return (0);
+// }

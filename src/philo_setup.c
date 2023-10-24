@@ -6,7 +6,7 @@
 /*   By: mbaptist <mbaptist@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 11:45:08 by mbaptist          #+#    #+#             */
-/*   Updated: 2023/10/23 17:10:01 by mbaptist         ###   ########.fr       */
+/*   Updated: 2023/10/24 15:59:53 by mbaptist         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void initialize_mutexes(pthread_mutex_t forks[], int num)
 }
 
 void create_philosophers_and_threads(pthread_t philosopher_threads[], t_philosopher philosophers[], 
-        pthread_mutex_t forks[], char **argv, int argc)
+        pthread_mutex_t forks[], char **argv, int argc, unsigned long simulation_start_time, int *philosopher_died, pthread_mutex_t *death_mutex)
 {
     int i;
     
@@ -40,21 +40,32 @@ void create_philosophers_and_threads(pthread_t philosopher_threads[], t_philosop
         philosophers[i].eat_count = 0;
         philosophers[i].left_fork = &forks[i];
         philosophers[i].right_fork = &forks[(i + 1) % ft_atoi(argv[1])];
+        philosophers[i].last_eating_time = simulation_start_time;
+        philosophers[i].start_time = simulation_start_time;
+        philosophers[i].total_philos = ft_atoi(argv[1]);
+        philosophers[i].death_flag = philosopher_died;
+        philosophers[i].death_mutex = death_mutex;
         pthread_create(&philosopher_threads[i], NULL, philosopher_life, &philosophers[i]);
         i++;
     }
 }
 
-void join_threads(pthread_t philosopher_threads[], int num) {
-    int i = 0;
+void join_threads(pthread_t philosopher_threads[], int num)
+{
+    int i;
+    
+    i = 0;
     while (i < num) {
         pthread_join(philosopher_threads[i], NULL);
         i++;
     }
 }
 
-void destroy_mutexes(pthread_mutex_t forks[], int num) {
-    int i = 0;
+void destroy_mutexes(pthread_mutex_t forks[], int num)
+{
+    int i;
+    
+    i = 0;
     while (i < num) {
         pthread_mutex_destroy(&forks[i]);
         i++;
@@ -67,31 +78,41 @@ void *philosopher_life(void *data)
 
     while (1)
 	{
-        unsigned long current_time = get_curr_time_in_milliscs();
-
-        if (current_time - philosopher->last_eating_time > philosopher->time_to_die)
+        unsigned long current_time;
+        unsigned long relative_time;
+        
+        current_time = get_curr_time_in_milliscs();
+        relative_time = current_time - philosopher->start_time;
+       
+        if (current_time - philosopher->last_eating_time >= philosopher->time_to_die)
         {
-        // The philosopher dies. Handle this event.
-        printf("Philosopher %d died.\n", philosopher->id);
-        return NULL;  // exit the philosopher's thread
+        printf(RED "%lu %d died." RESET "\n", relative_time, philosopher->id);
+        pthread_mutex_lock(philosopher->death_mutex);
+        *(philosopher->death_flag) = 1;
+        pthread_mutex_unlock(philosopher->death_mutex);
+        return NULL;
         }
-        // Try to get forks
+        if (philosopher->total_philos == 1) 
+        {
+            continue;
+        }
         pthread_mutex_lock(philosopher->left_fork);
         pthread_mutex_lock(philosopher->right_fork);
-        // Eat
-        printf("%d is eating\n", philosopher->id);
-        philosopher->eat_count++;
+        relative_time = get_curr_time_in_milliscs() - philosopher->start_time;
+        printf("%lu %d is eating\n", relative_time, philosopher->id);
+        philosopher->last_eating_time = get_curr_time_in_milliscs();
         usleep(philosopher->time_to_eat * 1000);
+        philosopher->eat_count++;
         pthread_mutex_unlock(philosopher->right_fork);
         pthread_mutex_unlock(philosopher->left_fork);
-
         if (philosopher->eat_count == philosopher->number_of_times_to_eat)
             break;
-        // Sleep
-        printf("%d is sleeping\n", philosopher->id);
+        relative_time = get_curr_time_in_milliscs() - philosopher->start_time;
+        printf("%lu %d is sleeping\n", relative_time, philosopher->id);
         usleep(philosopher->time_to_sleep * 1000);
-        // Think
-        printf("%d is thinking\n", philosopher->id);
+        relative_time = get_curr_time_in_milliscs() - philosopher->start_time;
+        printf("%lu %d is thinking\n", relative_time, philosopher->id);
+        ft_usleep(100);
     }
     return NULL;
 }
