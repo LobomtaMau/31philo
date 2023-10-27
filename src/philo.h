@@ -6,7 +6,7 @@
 /*   By: mbaptist <mbaptist@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:38:37 by mbaptist          #+#    #+#             */
-/*   Updated: 2023/10/24 15:56:24 by mbaptist         ###   ########.fr       */
+/*   Updated: 2023/10/27 15:13:16 by mbaptist         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,12 @@ int close_game(const char *msg);
 void destroy_mutexes(pthread_mutex_t forks[], int num);
 void join_threads(pthread_t philosopher_threads[], int num);
 void create_philosophers_and_threads(pthread_t philosopher_threads[], t_philosopher philosophers[], pthread_mutex_t forks[], char **argv, int argc, unsigned long simulation_start_time, int *philosopher_died, pthread_mutex_t *death_mutex);
+void initialize_mutexes(pthread_mutex_t forks[], int num);
+
 //utils
 int	ft_atoi(const char *str);
 unsigned long get_curr_time_in_milliscs(void);
-// int	ft_usleep(unsigned long milliseconds);
+int	ft_usleep(unsigned long milliseconds);
 
 
 #endif
