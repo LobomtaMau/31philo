@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   util.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbaptist <mbaptist@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 13:59:50 by mbaptist          #+#    #+#             */
-/*   Updated: 2023/10/27 15:15:17 by mbaptist         ###   ########.fr       */
+/*   Updated: 2023/10/31 16:03:03 by mbaptist         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,21 +34,53 @@ int	ft_atoi(const char *str)
 	}
 	return (res * sign);
 }
-
-unsigned long get_curr_time_in_milliscs(void)
+int validate_args(int argc, char **argv)
 {
-    struct timeval time;
-	if (gettimeofday(&time, NULL) == -1)
-		return close_game("Error: getting time.\n");
-    return (time.tv_sec * 1000UL) + (time.tv_usec / 1000UL);
+    int i;
+    
+    if (argc < 5 || argc > 6)
+        return 0;
+    i = 1;
+    while (i < argc)
+     {
+        if (!is_valid_arg(argv[i]))
+            return 0;
+        if (ft_atoi(argv[i]) <= 0)
+            return 0;
+        i++;
+    }
+    return 1;
 }
 
-int	ft_usleep(unsigned long milliseconds)
+int is_valid_arg(const char *str)
 {
-	unsigned long	start;
+    int i;
 
-	start = get_curr_time_in_milliscs();
-	while ((get_curr_time_in_milliscs() - start) < milliseconds)
+	i = 0;
+    while (str[i])
+	{
+        if (str[i] < '0' || str[i] > '9')
+            return 0;
+        i++;
+    }
+    return 1;
+}
+
+size_t	get_current_time(void)
+{
+	struct timeval	time;
+
+	if (gettimeofday(&time, NULL) == -1)
+		return close_game("Error: getting time.\n", NULL, NULL);
+	return (time.tv_sec * 1000 + time.tv_usec / 1000);
+}
+
+int	ft_usleep(size_t milliseconds)
+{
+	size_t	start;
+
+	start = get_current_time();
+	while ((get_current_time() - start) < milliseconds)
 		usleep(500);
 	return (0);
 }

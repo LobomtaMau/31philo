@@ -5,22 +5,20 @@
 #                                                     +:+ +:+         +:+      #
 #    By: mbaptist <mbaptist@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/10/23 14:07:10 by mbaptist          #+#    #+#              #
-#    Updated: 2023/10/24 15:16:14 by mbaptist         ###   ########.fr        #
+#    Created: 2023/10/30 15:23:15 by mbaptist          #+#    #+#              #
+#    Updated: 2023/10/31 15:52:34 by mbaptist         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-# ./philo 1 800 200 200 
-# ./philo 5 800 200 200 
-# ./philo 5 800 200 200 7
-# ./philo 4 410 200 200		/2
-# ./philo 4 310 200 100		/2
+# "./philo 5 283 203 202324 7
 
 NAME = philo
 
 SRC =	philo.c\
-		philo_setup.c\
-		utils.c\
+		actions.c\
+		control.c\
+		starting.c\
+		util.c\
 
 SRC_DIR = src
 OBJ_DIR = obj
@@ -48,4 +46,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean reNAME = philo
+.PHONY: all clean fclean re

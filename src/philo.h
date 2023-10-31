@@ -5,59 +5,82 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbaptist <mbaptist@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/17 16:38:37 by mbaptist          #+#    #+#             */
-/*   Updated: 2023/10/27 15:13:16 by mbaptist         ###   ########.fr       */
+/*   Created: 2023/10/30 15:06:25 by mbaptist          #+#    #+#             */
+/*   Updated: 2023/10/31 14:49:56 by mbaptist         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
-#include <pthread.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/time.h>
+# include <pthread.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <sys/time.h>
+# include <unistd.h>
 
-#define RED "\x1B[31m"
-#define RESET "\x1B[0m"
+//# define PHILO_MAX 300 //paque
 
-typedef struct s_philosopher
+typedef struct s_philo
 {
-    int total_philos;
-    int id;
-    int *death_flag;
+	pthread_t		thread;
+	int				id;
+	int				eating;
+	int				meals_eaten;
+	size_t			last_meal;
+	size_t			time_to_die;
+	size_t			time_to_eat;
+	size_t			time_to_sleep;
+	size_t			start_time;
+	int				num_of_philos;
+	int				num_times_to_eat;
+	int				*dead;
+	pthread_mutex_t	*r_fork;
+	pthread_mutex_t	*l_fork;
+	pthread_mutex_t	*write_lock;
+	pthread_mutex_t	*dead_lock;
+	pthread_mutex_t	*meal_lock;
+}					t_philo;
 
-    unsigned long time_to_die;
-    unsigned long time_to_sleep;
-    
-    unsigned long time_to_eat;
-    unsigned long last_eating_time;
-    unsigned long start_time;
-    
-    int number_of_times_to_eat;
-    int eat_count;
-    
-    pthread_mutex_t *left_fork;
-    pthread_mutex_t *right_fork;
-    pthread_mutex_t *death_mutex;
-    
-} t_philosopher;
+typedef struct s_table
+{
+	int				dead_flag;
+	pthread_mutex_t	dead_lock;
+	pthread_mutex_t	meal_lock;
+	pthread_mutex_t	write_lock;
+	t_philo			*philos;
+}					t_table;
 
-//philo
-void *philosopher_life(void *data);
-int close_game(const char *msg);
-
-//threads
-void destroy_mutexes(pthread_mutex_t forks[], int num);
-void join_threads(pthread_t philosopher_threads[], int num);
-void create_philosophers_and_threads(pthread_t philosopher_threads[], t_philosopher philosophers[], pthread_mutex_t forks[], char **argv, int argc, unsigned long simulation_start_time, int *philosopher_died, pthread_mutex_t *death_mutex);
-void initialize_mutexes(pthread_mutex_t forks[], int num);
 
 //utils
 int	ft_atoi(const char *str);
-unsigned long get_curr_time_in_milliscs(void);
-int	ft_usleep(unsigned long milliseconds);
+int is_valid_arg(const char *str);
+int validate_args(int argc, char **argv);
+size_t	get_current_time(void);
+int	ft_usleep(size_t milliseconds);
+void print_msg(char *str, t_philo *philo, int id);
+
+
+//starting
+void start_table(t_table *table, t_philo *philos);
+void start_forks(pthread_mutex_t *forks, int n_philo);
+void start_philos(t_philo *philos, t_table *table, pthread_mutex_t *forks, char **argv);
+void start_tertulia(t_philo * philo, char **argv);
+
+void *philo_tertulia(void *ptr);
+int close_game(const char *msg, t_table *table,  pthread_mutex_t *forks);
+int create_threads(t_table *table, pthread_mutex_t *forks);
+int search_death(t_philo *philo);
+
+//bs
+void *control(void *ptr);
+int check_death(t_philo *philos);
+int dead_philo(t_philo *philo, size_t time_to_die);
+int check_all_eat(t_philo *philos);
+
+void is_eating(t_philo *philo);
+void is_sleeping(t_philo *philo);
+void is_thinking(t_philo *philo);
 
 
 #endif

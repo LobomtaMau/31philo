@@ -6,39 +6,53 @@
 /*   By: mbaptist <mbaptist@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:47:19 by mbaptist          #+#    #+#             */
-/*   Updated: 2023/10/24 17:19:03 by mbaptist         ###   ########.fr       */
+/*   Updated: 2023/10/31 16:02:00 by mbaptist         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int main(int argc, char **argv)
+int main (int argc, char **argv)
 {
-    unsigned long simulation_start_time;
-    
-    if (argc < 5 || argc > 6)
-        return close_game("Error: Not enough arguments.");
-    int number_of_philosophers = ft_atoi(argv[1]);
-    if (!number_of_philosophers)
-        return close_game("Error: Failed to create philosophers.");
-    
-    int philosopher_died = 0; //decl
-    pthread_mutex_t death_mutex;
-    pthread_mutex_t forks[number_of_philosophers];
-    initialize_mutexes(forks, number_of_philosophers);
-    pthread_t philosopher_threads[number_of_philosophers];
-    t_philosopher philosophers[number_of_philosophers];
-    
-    simulation_start_time = get_curr_time_in_milliscs();
-    create_philosophers_and_threads(philosopher_threads, philosophers, forks, argv, argc, simulation_start_time, &philosopher_died, &death_mutex);
-    join_threads(philosopher_threads, number_of_philosophers);
-    destroy_mutexes(forks, number_of_philosophers);
-    pthread_mutex_destroy(&death_mutex);
+    int n_philos;
 
-    return 0;
+    n_philos = ft_atoi(argv[1]);
+    
+    t_philo philos[n_philos];
+    t_table table;
+    pthread_mutex_t forks[n_philos];
+
+    if (!validate_args(argc, argv))
+        return close_game("Error: Invalid arguments.", &table, forks);
+    start_table(&table, philos);
+    start_forks(forks, n_philos);
+    start_philos(philos, &table, forks, argv);
+    create_threads(&table, forks);
+    close_game(NULL, &table, forks);
+    return (0);
 }
-int close_game(const char *msg)
+
+
+int close_game(const char *msg, t_table *table,  pthread_mutex_t *forks)
 {
-    printf("%s\n", msg);
+    int i;
+
+    i = 0;
+    if (table)
+    {
+        pthread_mutex_destroy(&table->write_lock);
+        pthread_mutex_destroy(&table->dead_lock);
+    }
+
+    if (forks)
+    {
+        while (i < table->philos[0].num_of_philos)
+        {
+            pthread_mutex_destroy(&forks[i]);
+            i++;
+        }
+    }
+    if (msg)
+        printf("%s\n", msg);
     return EXIT_FAILURE;
 }
