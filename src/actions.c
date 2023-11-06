@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   actions.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbaptist <mbaptist@student.42.fr>          +#+  +:+       +#+        */
+/*   By: struf <struf@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 11:45:08 by mbaptist          #+#    #+#             */
-/*   Updated: 2023/11/06 13:46:46 by mbaptist         ###   ########.fr       */
+/*   Updated: 2023/11/06 15:21:47 by struf            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,25 @@
 
 void	is_sleeping(t_philo *philo)
 {
-    size_t sleep_start_time = get_current_time();
-    size_t time_slept = 0;
+	size_t	sleep_start_time;
+	size_t	time_slept;
 
-    print_msg("is sleeping", philo, philo->id);
-
-    while (time_slept < philo->time_to_sleep)
-    {
-        if (get_current_time() - philo->last_meal > philo->time_to_die)
-        {
-            pthread_mutex_lock(philo->dead_lock);
-            *philo->dead = 1;
-            pthread_mutex_unlock(philo->dead_lock);
-            print_msg("died", philo, philo->id);
-            return;
-        }
-        ft_usleep(10);
-        time_slept = get_current_time() - sleep_start_time;
-    }
+	sleep_start_time = get_current_time();
+	time_slept = 0;
+	print_msg("is sleeping", philo, philo->id);
+	while (time_slept < philo->time_to_sleep)
+	{
+		if (get_current_time() - philo->last_meal > philo->time_to_die)
+		{
+			pthread_mutex_lock(philo->dead_lock);
+			*philo->dead = 1;
+			pthread_mutex_unlock(philo->dead_lock);
+			print_msg("died", philo, philo->id);
+			return ;
+		}
+		ft_usleep(10);
+		time_slept = get_current_time() - sleep_start_time;
+	}
 }
 
 void	is_eating(t_philo *philo)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   util.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbaptist <mbaptist@student.42.fr>          +#+  +:+       +#+        */
+/*   By: struf <struf@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 13:59:50 by mbaptist          #+#    #+#             */
-/*   Updated: 2023/11/06 14:15:50 by mbaptist         ###   ########.fr       */
+/*   Updated: 2023/11/06 15:22:19 by struf            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,29 @@
 
 int	ft_atoi(const char *str)
 {
-	int i;
-    long res;
+	int		i;
+	long	res;
 
-    i = 0;
-    res = 0;
-    while ((str[i] == ' ') || (str[i] >= 9 && str[i] <= 13))
-        i++;
-    if (str[i] == '+')
-        i++;
-    while (str[i] >= '0' && str[i] <= '9')
+	i = 0;
+	res = 0;
+	while ((str[i] == ' ') || (str[i] >= 9 && str[i] <= 13))
+		i++;
+	if (str[i] == '+')
+		i++;
+	while (str[i] >= '0' && str[i] <= '9')
 	{
-        res = res * 10 + (str[i] - '0');
-        if (res > INT_MAX) return -1; 
-        i++;
-    }
-    return (int)res;
+		res = res * 10 + (str[i] - '0');
+		if (res > INT_MAX)
+			return (-1);
+		i++;
+	}
+	return ((int)res);
 }
+
 int	validate_args(int argc, char **argv)
 {
 	int	i;
-	int value;
+	int	value;
 
 	if (argc < 5 || argc > 6)
 		return (0);
