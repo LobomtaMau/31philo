@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   control.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: struf <struf@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mbaptist <mbaptist@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 11:45:08 by mbaptist          #+#    #+#             */
-/*   Updated: 2023/10/31 16:12:10 by struf            ###   ########.fr       */
+/*   Updated: 2023/11/06 12:36:20 by mbaptist         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int	create_threads(t_table *table, pthread_mutex_t *forks)
 	int			i;
 
 	if (pthread_create(&the_death, NULL, &control, table->philos) != 0)
-		close_game("Thread creation error", table, forks);
+		close_game("Error: Thread creation error", table, forks);
 	i = 0;
 	while (i < table->philos[0].num_of_philos)
 	{

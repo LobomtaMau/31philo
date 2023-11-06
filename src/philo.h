@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: struf <struf@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mbaptist <mbaptist@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 15:06:25 by mbaptist          #+#    #+#             */
-/*   Updated: 2023/10/31 16:15:51 by struf            ###   ########.fr       */
+/*   Updated: 2023/11/06 13:55:47 by mbaptist         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
+# include <limits.h>
 # include <pthread.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -51,35 +52,35 @@ typedef struct s_table
 	t_philo			*philos;
 }					t_table;
 
-//utils
+//starting
+void				start_table(t_table *table, t_philo *philos);
+void				start_forks(pthread_mutex_t *forks, int n_philo);
+void				start_tertulia(t_philo *philo, char **argv);
+void				start_philos(t_philo *philos, t_table *table,
+						pthread_mutex_t *forks, char **argv);
+
+//Control
+void				*philo_tertulia(void *ptr);
+int					create_threads(t_table *table, pthread_mutex_t *forks);
+int					search_death(t_philo *philo);
+void				*control(void *ptr);
+int					check_death(t_philo *philos);
+int					dead_philo(t_philo *philo, size_t time_to_die);
+int					check_all_eat(t_philo *philos);
+
+//Actions
+void				is_eating(t_philo *philo);
+void				is_sleeping(t_philo *philo);
+void				is_thinking(t_philo *philo);
+
+//Utils
 int					ft_atoi(const char *str);
 int					is_valid_arg(const char *str);
 int					validate_args(int argc, char **argv);
 size_t				get_current_time(void);
 int					ft_usleep(size_t milliseconds);
 void				print_msg(char *str, t_philo *philo, int id);
-
-//starting
-void				start_table(t_table *table, t_philo *philos);
-void				start_forks(pthread_mutex_t *forks, int n_philo);
-void				start_philos(t_philo *philos, t_table *table,
-						pthread_mutex_t *forks, char **argv);
-void				start_tertulia(t_philo *philo, char **argv);
-
-void				*philo_tertulia(void *ptr);
 int					close_game(const char *msg, t_table *table,
 						pthread_mutex_t *forks);
-int					create_threads(t_table *table, pthread_mutex_t *forks);
-int					search_death(t_philo *philo);
-
-//bs
-void				*control(void *ptr);
-int					check_death(t_philo *philos);
-int					dead_philo(t_philo *philo, size_t time_to_die);
-int					check_all_eat(t_philo *philos);
-
-void				is_eating(t_philo *philo);
-void				is_sleeping(t_philo *philo);
-void				is_thinking(t_philo *philo);
 
 #endif

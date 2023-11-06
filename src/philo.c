@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: struf <struf@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mbaptist <mbaptist@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 16:47:19 by mbaptist          #+#    #+#             */
-/*   Updated: 2023/10/31 16:19:17 by struf            ###   ########.fr       */
+/*   Updated: 2023/11/06 14:23:04 by mbaptist         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	main(int argc, char **argv)
 	pthread_mutex_t	forks[PHILO_MAX];
 
 	if (!validate_args(argc, argv))
-		return (close_game("Error: Invalid arguments.", &table, forks));
+		return (close_game("Error: Invalid arguments.", NULL, NULL));
 	start_table(&table, philos);
 	start_forks(forks, ft_atoi(argv[1]));
 	start_philos(philos, &table, forks, argv);

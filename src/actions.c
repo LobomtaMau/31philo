@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   actions.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: struf <struf@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mbaptist <mbaptist@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 11:45:08 by mbaptist          #+#    #+#             */
-/*   Updated: 2023/10/31 16:11:34 by struf            ###   ########.fr       */
+/*   Updated: 2023/11/06 13:46:46 by mbaptist         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,24 @@
 
 void	is_sleeping(t_philo *philo)
 {
-	print_msg("is sleeping", philo, philo->id);
-	ft_usleep(philo->time_to_sleep);
+    size_t sleep_start_time = get_current_time();
+    size_t time_slept = 0;
+
+    print_msg("is sleeping", philo, philo->id);
+
+    while (time_slept < philo->time_to_sleep)
+    {
+        if (get_current_time() - philo->last_meal > philo->time_to_die)
+        {
+            pthread_mutex_lock(philo->dead_lock);
+            *philo->dead = 1;
+            pthread_mutex_unlock(philo->dead_lock);
+            print_msg("died", philo, philo->id);
+            return;
+        }
+        ft_usleep(10);
+        time_slept = get_current_time() - sleep_start_time;
+    }
 }
 
 void	is_eating(t_philo *philo)
@@ -34,8 +50,8 @@ void	is_eating(t_philo *philo)
 	print_msg("is eating", philo, philo->id);
 	pthread_mutex_lock(philo->meal_lock);
 	philo->last_meal = get_current_time();
-	philo->meals_eaten++;
 	pthread_mutex_unlock(philo->meal_lock);
+	philo->meals_eaten++;
 	ft_usleep(philo->time_to_eat);
 	philo->eating = 0;
 	pthread_mutex_unlock(philo->l_fork);
